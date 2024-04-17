@@ -3,7 +3,7 @@
 This is the code base for *Leveraging the Human Ventral Visual Stream to Improve Neural Network Robustness* 
 (Shao, Z., Ma, L., Li, B., & Beck, D. M., 2024, in prep)
 
-See the abstract of our oral presentation [@VSS2024](https://www.visionsciences.org/talk-session/?id=164)
+:tada: See the abstract of our oral presentation [@VSS2024](https://www.visionsciences.org/talk-session/?id=164)
 
 [//]: # (### figure)
 
