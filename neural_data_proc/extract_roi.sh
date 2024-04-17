@@ -15,8 +15,7 @@
 
 sub=$1
 roi=$2
-sub_dir=${sub}_orig_roi
-out_dir=roi
+sub_dir=${sub}_nsd
 
 echo "====> Extracting $roi from subject $sub"
 
@@ -33,34 +32,6 @@ then
 	3dcalc -a ${sub_dir}/Kastner2015.nii.gz \
 	       -expr "equals(a, 3) + equals(a, 4)" \
 	       -prefix ${sub_dir}/V2
-
-elif [[ "$roi" == "V1v" ]]
-then
-	echo "entering V1v"
-	3dcalc -a ${sub_dir}/Kastner2015.nii.gz \
-	       -expr "equals(a, 1)" \
-	       -prefix ${sub_dir}/V1v
-
-elif [[ "$roi" == "V1d" ]]
-then
-	echo "entering V1d"
-	3dcalc -a ${sub_dir}/Kastner2015.nii.gz \
-	       -expr "equals(a, 2)" \
-	       -prefix ${sub_dir}/V1d
-
-elif [[ "$roi" == "V2v" ]]
-then
-	echo "entering V2v"
-	3dcalc -a ${sub_dir}/Kastner2015.nii.gz \
-	       -expr "equals(a, 3)" \
-	       -prefix ${sub_dir}/V2v
-
-elif [[ "$roi" == "V2d" ]]
-then
-	echo "entering V2d"
-	3dcalc -a ${sub_dir}/Kastner2015.nii.gz \
-	       -expr "equals(a, 4)" \
-	       -prefix ${sub_dir}/V2d
 
 elif [[ "$roi" == "V4" ]]
 then
@@ -106,13 +77,12 @@ fi
 3dcalc -a ${sub_dir}/${roi}+orig \
 	   -b ${sub_dir}/nsdgeneral.nii.gz \
 	   -expr "a * b" \
-	   -prefix ${sub_dir}/${sub}_${roi}_roi
+	   -prefix ${sub_dir}/${sub}_${roi}
 
 
-3dAFNItoNIFTI -prefix ${sub_dir}/${sub}_${roi}_roi \
-			  ${sub_dir}/${sub}_${roi}_roi+orig
+3dAFNItoNIFTI -prefix ${sub_dir}/${sub}_${roi} \
+			  ${sub_dir}/${sub}_${roi}+orig
 
-mv ${sub_dir}/*.nii $out_dir
 
 
 

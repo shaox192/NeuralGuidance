@@ -1,31 +1,33 @@
 """
-generate roi masks as pkl files
-nii roi masks were processed by afni --> binary masks for each roi
-use extract_roi.sh to do this.
+convert nifti roi masks into binary pickle files
 """
 import argparse
 import numpy as np
-from utils import pickle_dump, load_from_nii
+import os
+import utils
 
 parser = argparse.ArgumentParser(description='turn roi masks into pkl')
-parser.add_argument('--sub', default='sub1', type=str,
-                    help='sub1, sub2, ...')
-parser.add_argument('--roi', default='prf_hV4', type=str,
-                    help='roi name: [prf_V1], [prf_hV4]...')
+parser.add_argument('--sub', type=str,
+                    help='subject ID: [sub1], [sub2], ...')
+parser.add_argument('--roi', type=str,
+                    help='roi name: [V1], [V2], [V4],...')
+parser.add_argument('--data-dir', default='', type=str,
+                    help='directory with ROI masks')
 
 
+def main(args):
 
-def main(sub, roi):
-    roi_dir = "roi"
-
-    roi_mask = load_from_nii(f"{roi_dir}/{sub}_{roi}_roi.nii").flatten()
+    roi_mask = utils.load_from_nii(os.path.join(args.data_dir, f"{args.sub}_{args.roi}.nii")).flatten()
     roi_arr = np.zeros(shape=roi_mask.shape, dtype=bool)
     cur_roi = np.logical_or(roi_arr, np.isclose(roi_mask, 1))
-    pickle_dump(cur_roi, f"{roi_dir}/{sub}_{roi}_roi.pkl")
+
+    utils.pickle_dump(cur_roi, os.path.join(args.data_dir, f"{args.sub}_{args.roi}.pkl"))
+
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    roi = args.roi
-    sub = args.sub
+    args.data_dir = f"{args.sub}_nsd" if args.data_dir == '' else args.data_dir
 
-    main(sub, roi)
+    utils.show_input_args(args)
+
+    main(args)

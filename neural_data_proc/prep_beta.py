@@ -5,21 +5,20 @@ import os
 import argparse
 from scipy.io import loadmat
 from sklearn.decomposition import PCA
-
 import numpy as np
-from utils import pickle_load, pickle_dump, load_from_nii, make_directory
 
-parser = argparse.ArgumentParser(description='extract beta from a given roi mask')
-parser.add_argument('--sub', default='sub1', type=str,
-                    help='sub1, sub2, ...')
-parser.add_argument('--roi', default='prf_hV4', type=str,
-                    help='roi name: [prf_V1], [prf_hV4]...')
-parser.add_argument('--avg_repeat', dest='avg_repeat', action='store_true',
-                    help='Average repeated images')
+import utils
+
+
+parser = argparse.ArgumentParser(description='get train/val data split from a given roi mask')
+parser.add_argument('--sub', type=str,
+                    help='subject ID: [sub1], [sub2], ...')
+parser.add_argument('--roi', type=str,
+                    help='roi name: [V1], [V2], [V4],...')
 
 
 def load_beta_file(filename, voxel_mask):
-    values = load_from_nii(filename).transpose((3, 0, 1, 2))
+    values = utils.load_from_nii(filename).transpose((3, 0, 1, 2))
     print(f"\n--> loading from file: {filename}...\n",
           "\tData description: ", values.dtype, np.min(values), np.max(values), values.shape)
 
@@ -75,38 +74,34 @@ def avg_repeated_image(full_beta_data, ordering):
     return new_ordering, new_beta
 
 
-def main(sub, roi, calc_repeat):
-    prefix = "."
-    save_dir = f"{prefix}/{sub}_betas_masked"
-    make_directory(save_dir)
+def main(args):
+    # prefix = "."
+    save_dir = f"./{args.sub}_data"
+    utils.make_directory(save_dir)
 
-    mask_f = f"{prefix}/roi/{sub}_{roi}_roi.pkl"
-    mask = pickle_load(mask_f)
-    print(f"---> For subject: {sub}: loaded masks from {mask_f}..."
-          f"\t actual roi size: {np.sum(mask)}, np array shape: {mask.shape}")
+    mask_f = os.path.join(f"{args.sub}_nsd", f"{args.sub}_{args.roi}.pkl")
+    mask = utils.pickle_load(mask_f)
+    print(f"*** Loaded masks from {mask_f}. Actual roi size: {np.sum(mask)}")
 
     full_beta_sessions = []
-    beta_dir = f"{prefix}/{sub}_betas"
+    beta_dir = f"{args.sub}_betas"
     for beta_f in sorted(os.listdir(beta_dir)):
         if not beta_f.endswith(".nii.gz"):
             continue
-        beta = load_beta_file(f"{prefix}/{sub}_betas/{beta_f}", mask)
+        beta = load_beta_file(f"{beta_dir}/{beta_f}", mask)
         full_beta_sessions.append(beta)
 
     full_beta_sessions = np.concatenate(full_beta_sessions, axis=0)
-    print(f"\n*** Final full beta size (num_trial X roi size): {full_beta_sessions.shape} ***\n")
+    print(f"\n*** Full beta session data size (number of trial X roi size): {full_beta_sessions.shape}")
 
     # ordering
-    exp_design = loadmat(f"{prefix}/nsd_expdesign.mat")
+    exp_design = loadmat(f"{args.sub}_nsd/nsd_expdesign.mat")
     ordering = exp_design['masterordering'].flatten() - 1
     ordering = ordering[:full_beta_sessions.shape[0]]  # in case we are only using a subset of sessions
 
-    if calc_repeat:
-        print("---> Averaging repeated images...")
-        ordering, full_beta_sessions = avg_repeated_image(full_beta_sessions, ordering)
-        dump_f = f"{save_dir}/{sub}_orders_betas_{roi}.pkl"
-    else:
-        dump_f = f"{save_dir}/{sub}_betas_{roi}.pkl"
+    print("\n*** Averaging repeated images...")
+    ordering, full_beta_sessions = avg_repeated_image(full_beta_sessions, ordering)
+    dump_f = os.path.join(save_dir, f"{args.sub}_{args.roi}_data.pkl")
 
     val_mask = ordering < 1000
 
@@ -122,24 +117,23 @@ def main(sub, roi, calc_repeat):
     train_data = np.nan_to_num((train_data - mb) / (sb + 1e-6))
     val_data = np.nan_to_num((val_data - mb) / (sb + 1e-6))
 
+    print(f"\n*** Data train/val split: train-{train_data.shape}, val-{val_data.shape}")
+
     # perform PCA on the data
-    print(f"\n>>*** Beta before PCA: train-{train_data.shape}, val-{val_data.shape} ***<<\n")
     pca = PCA(n_components=0.95, svd_solver="full")
     pca.fit(train_data)
     train_data = pca.transform(train_data)
     val_data = pca.transform(val_data)
-    print(f"\n>>*** Beta after PCA: train-{train_data.shape}, val-{val_data.shape}; "
-          f"Variance Explained: {pca.explained_variance_ratio_.cumsum()[-1]}% ***<<\n")
+    print(f"\n*** Data train/val split after PCA, 95% var: train-{train_data.shape}, val-{val_data.shape}; "
+          f"Variance Explained: {pca.explained_variance_ratio_.cumsum()[-1]}%")
 
     betaorder2save = {"val_imgID": val_id, "val_beta": val_data,
                       "train_imgID": train_id, "train_beta": train_data}
-    pickle_dump(betaorder2save, dump_f)
+    utils.pickle_dump(betaorder2save, dump_f)
 
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    sub = args.sub
-    roi = args.roi
-    calc_repeat = args.avg_repeat
+    utils.show_input_args(args)
 
-    main(sub, roi, calc_repeat)
+    main(args)

@@ -1,6 +1,6 @@
 import os
 import pickle as pkl
-import h5py
+
 
 def make_directory(pth):
     if not os.path.exists(pth):
@@ -12,7 +12,10 @@ def make_directory(pth):
 
 def load_from_nii(mask_nii_file):
     import nibabel as nib
-    return nib.load(mask_nii_file).get_fdata()
+    if os.path.exists(mask_nii_file):
+        return nib.load(mask_nii_file).get_fdata()
+    else:
+        raise FileNotFoundError(f"can't find mask file: {mask_nii_file}!")
 
 
 def pickle_load(fpth):
@@ -27,20 +30,8 @@ def pickle_dump(data, fpth):
         pkl.dump(data, f)
 
 
-def save_stuff(save_to_this_file, data_objects_dict):
-    failed = []
-    with h5py.File(save_to_this_file+'.h5py', 'w') as hf:
-        for k,v in data_objects_dict.items():
-            try:
-                hf.create_dataset(k,data=v)
-                print ('saved %s in h5py file' %(k))
-            except:
-                failed.append(k)
-                print ('failed to save %s as h5py. will try pickle' %(k))
-    for k in failed:
-        with open(save_to_this_file+'_'+'%s.pkl' %(k), 'w') as pkl:
-            try:
-                pkl.dump(data_objects_dict[k],pkl)
-                print ('saved %s as pkl' %(k))
-            except:
-                print ('failed to save %s in any format. lost.' %(k))
+def show_input_args(args):
+    print("\n***check params ---------")
+    for arg in vars(args):
+        print(f"{arg}: {getattr(args, arg)}")
+    print("--------------------------\n")

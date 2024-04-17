@@ -1,58 +1,51 @@
 # NeuralGuidance
 
-Code base for *Leveraging the Human Ventral Visual Stream to Improve Neural Network Robustness* 
-(Shao, Ma, Li, & Beck, 2024, in prep)
+This is the code base for *Leveraging the Human Ventral Visual Stream to Improve Neural Network Robustness* 
+(Shao, Z., Ma, L., Li, B., & Beck, D. M., 2024, in prep)
 
-### figure
+See the abstract of our oral presentation [@VSS2024](https://www.visionsciences.org/talk-session/?id=164)
 
-### Abstract
+[//]: # (### figure)
 
-
-
-
-
+[//]: # (### Abstract)
 
 ### Data:
-- Original human neural data are retrieved from the Natural Scene Dataset (NSD) (Allen et al., 2022) publically available on [here](https://osf.io/yc97n/).
+- Original human neural data are retrieved from the Natural Scene Dataset (NSD) (Allen et al., 2022) publically available on [here](https://naturalscenesdataset.org/).
 
-- Further fully processed data ready for neural predictor training have been made available [here](https://osf.io). Data are stored in __HDF5__ formats descriptions in ?. Scripts for processing steps to generate these data are in [neural_data_proc/](./neural_data_proc)
+- Further processing of neural data for neural predictor training uses scripts in [neural_data_proc/](./neural_data_proc)
 
-- Images used to train neural predictors are a selection from MSCOCO used in NSD for participants to view. The processed versions are included in the same osf repo [here](https://osf.io). Images used in neural-guidance training were obtained from [ImageNet](), [CIFAR-100](). Details on these image sets are in the [*Methods*]() section of our manuscript.
+- Images used to train neural predictors are a selection from MSCOCO used in NSD for participants to view. Images used in neural-guidance training were obtained from [ImageNet](https://www.image-net.org/download.php) and [CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html). Details on these image sets are in the [*Methods*]() section of our manuscript.
 
--Fully trained weights of neural predictors used in our experiment have also been made available [here](https://osf.io). 
+[//]: # (- Fully trained weights of neural predictors used in our experiment have also been made available [here]&#40;https://osf.io&#41;. )
 
 
 ***
 ### Folder walkthrough
 
-#### neural_data_proc
-All processing scripts needed to further clean and extract neural data from subject-1 of the NSD dataset. There is a mix of AFNI shell scripts to extract all the ROI masks needed and further processing scripts. 
+[**neural_data_proc/**](./neural_data_proc): 
+All processing scripts needed to further clean and extract neural data from the NSD dataset.
+Note: need [**AFNI**](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/main_toc.html) (Version AFNI_20.0.4) to run the scripts.
 
-therefore are __not directly runnable__ but serve as a demonstration
+[**neural_predictor_training/**](./neural_predictor_training): 
+Scripts used to train neural predictors. Need to have the fully processed neural data and images ready. 
+Neural predictors used for ImageNet images and CIFAR-100 images have different structures to accomodate image difference. 
+main_regular.py is for the regular neural predictor, and main_cifar.py is to run the version designed for CIFAR-100.
 
-**Special dependencies**:
- 1. AFNI: Version AFNI_20.0.4
+[**neural_guidance_training/**](./neural_guidance_training):
+Scripts used to train the double-headed Resnet-18-based DNN to perform both classification and neural representation learning. 
+Need to have fully trained neural predictors ready. Again, we have two versions to deal with imageNet and CIFAR-100. 
+We included 7 neurally-guided models, 4 baseline models, and additional 5 WD-models (with different levels of weight decay
+values that creates models with comparable level of output surface smoothness).
 
-#### neural_predictor_training
-Scripts used to train neural predictors. Need to have the fully processed neural data and images ready. Neural predictors used for ImageNet images and CIFAR-100 images are different in the first convolution layer. main_regular.py is for the regular neural predictor, and main_cifar.py is to run the version with modification.
+[**captioning/**](./captioning):
+This is to adapt the neurally-guided DNNs to serve as the encoder for an image captioning task. 
+The encoder-decoder structure and the pretrained-weights of decoders were obtained from [Show-Attend-Tell](https://arxiv.org/abs/1502.03044).
 
-**Special dependencies**:
- 1. PyTorch
-
-#### neural_guidance_training
-Scripts used to train double-headed Resnet-18-based DNN to perform both classification and neural representation learning. Need to have fully trained neural predictors ready. Again, we have two versions to deal with imageNet and CIFAR-100. We included five ROI models (with two additional shown in the Supporting Information) and four different baseline models to support our conclusions. See the manuscript for a description of each.
-
-#### captioning
-This is to adapt the DNNs trained with neural-guidance to serve as the encoder for an image captioning task. The decoders have pretrained-weights provided by [Show-Attend-Tell]()
-
-#### analysis
--attacks: this folder contains scripts to run all five adversarial attacks we included in the paper, and the transfer attack.
--texture_shape: this folder contains how we generated the texture-shape blended imageset and the evaluation of model's texture versus shape bias. 
--smoothness: this folder contains both the smoothness quantification and loss landscape (w.r.t input images) surface visualization. 
--rsa: this folder contains how the representation space similarity matrix was generated across all models used in our work.
-
-**Special dependencies**:
- 1. FoolBox
- 2. autoattack
+[**analysis/**](./analysis):  
+- attacks: this folder contains scripts to run all adversarial attacks we investigated.
+- texture_shape: this folder contains how we generated the texture-shape blended imageset and the evaluation of model's texture versus shape bias. 
+- smoothness: this folder contains both the smoothness quantification and loss landscape (w.r.t input images) surface visualization. 
+- rsa: this folder contains how the representation space similarity matrix was generated across all models used, along with the MDS visualization.
+- noise_ceil: this folder shows how to estimate the noise ceiling of neural data from each ROI using methods presented in the NSD.
 
 
