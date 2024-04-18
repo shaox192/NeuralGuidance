@@ -46,6 +46,6 @@ The encoder-decoder structure and the pretrained-weights of decoders were obtain
 - texture_shape: this folder contains how we generated the texture-shape blended imageset and the evaluation of model's texture versus shape bias. 
 - smoothness: this folder contains both the smoothness quantification and loss landscape (w.r.t input images) surface visualization. 
 - rsa: this folder contains how the representation space similarity matrix was generated across all models used, along with the MDS visualization.
-- noise_ceil: this folder shows how to estimate the noise ceiling of neural data from each ROI using methods presented in the NSD.
+- noise_ceiling.py: this shows how to estimate the noise ceiling of neural data from each ROI using methods presented in the NSD.
 
 
