@@ -6,6 +6,7 @@ This is the code base for *Leveraging the Human Ventral Visual Stream to Improve
 :tada: See the abstract of our oral presentation [@VSS2024](https://www.visionsciences.org/talk-session/?id=164)
 
 [//]: # (### figure)
+![alt text](docs/img/neuralguidance.png)
 
 [//]: # (### Abstract)
 
