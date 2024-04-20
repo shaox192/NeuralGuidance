@@ -2,6 +2,17 @@
 
 Using **sub1** and **V1** as an example
 
+**Needs**: fully trained model in the current directory
+
+### Adversarial attacks
+We performed five different adversarial attacks currently popular in the field.
+
+
+### Texture-shape bias evaluation
+
+
+### Surface smoothness evaluation
+
 
 ### Run RSA and MDS
 
