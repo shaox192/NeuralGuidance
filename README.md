@@ -1,9 +1,9 @@
 # NeuralGuidance
 
-This is the code base for *Leveraging the Human Ventral Visual Stream to Improve Neural Network Robustness* 
-(Shao, Z., Ma, L., Li, B., & Beck, D. M., 2024, in prep)
+This is the code repo for [*Leveraging the Human Ventral Visual Stream to Improve Neural Network Robustness*](https://arxiv.org/abs/2405.02564) 
+by Zhenan Shao, Linjian Ma, Bo Li, and Diane M. Beck.
 
-:tada: See the abstract of our oral presentation [@VSS2024](https://www.visionsciences.org/talk-session/?id=164)
+:tada: We will be giving an oral presentation [@*VSS2024*](https://www.visionsciences.org/talk-session/?id=164)
 
 [//]: # (### figure)
 ![alt text](docs/img/neuralguidance.png)
@@ -15,7 +15,7 @@ This is the code base for *Leveraging the Human Ventral Visual Stream to Improve
 
 - Further processing of neural data for neural predictor training uses scripts in [neural_data_proc/](./neural_data_proc)
 
-- Images used to train neural predictors are a selection from MSCOCO used in NSD for participants to view. Images used in neural-guidance training were obtained from [ImageNet](https://www.image-net.org/download.php) and [CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html). Details on these image sets are in the [*Methods*]() section of our manuscript.
+- Images used to train neural predictors are a selection from MSCOCO used in NSD for participants to view. Images used in neural-guidance training were obtained from [ImageNet](https://www.image-net.org/download.php) and [CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html). Details on these image sets are in the Methods section of our manuscript.
 
 [//]: # (- Fully trained weights of neural predictors used in our experiment have also been made available [here]&#40;https://osf.io&#41;. )
 
