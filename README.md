@@ -3,7 +3,7 @@
 This is the code repo for [*Leveraging the Human Ventral Visual Stream to Improve Neural Network Robustness*](https://arxiv.org/abs/2405.02564) 
 by Zhenan Shao, Linjian Ma, Bo Li, and Diane M. Beck.
 
-:tada: We will be giving an oral presentation [@*VSS2024*](https://www.visionsciences.org/talk-session/?id=164)
+:tada: We gave an oral presentation [@*VSS2024*](https://www.visionsciences.org/talk-session/?id=164). Recordings are available [here](https://www.youtube.com/watch?v=O67BelJTyXY).
 
 [//]: # (### figure)
 ![alt text](docs/img/neuralguidance.png)
