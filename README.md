@@ -1,15 +1,25 @@
 # NeuralGuidance
 
-This is the code repo for [*Leveraging the Human Ventral Visual Stream to Improve Neural Network Robustness*](https://arxiv.org/abs/2405.02564) 
-by Zhenan Shao, Linjian Ma, Bo Li, and Diane M. Beck.
+This is the code repo for [*Probing Human Visual Robustness with Neurally-Guided Deep Neural Networks*](https://arxiv.org/abs/2405.02564) 
+by Zhenan Shao, Linjian Ma, Yiqing Zhou, Yibo Jacky Zhang, Sanmi Koyejo, Bo Li, and Diane M. Beck.
 
-:tada: We will be giving an oral presentation [@*VSS2024*](https://www.visionsciences.org/talk-session/?id=164)
+We gave an oral presentation [@*VSS2024*](https://www.visionsciences.org/talk-session/?id=164) for the main Neural Guidance results and an oral presentation [@*VSS2025*](https://www.visionsciences.org/talk-session/?id=392) for the manifold analysis and Manifold Guidance results.
 
 [//]: # (### figure)
 ![alt text](docs/img/neuralguidance.png)
 
 [//]: # (### Abstract)
 
+**Abstract**:
+
+Humans effortlessly navigate the dynamic visual world, yet deep neural networks (DNNs), despite excelling at many visual tasks, are surprisingly vulnerable to minor image perturbations. Past theories suggest that human visual robustness arises from a representational space that evolves along the ventral visual stream (VVS) of the brain to increasingly tolerate object transformations. To test whether robustness is supported by such progression as opposed to being confined exclusively to specialized higher-order regions, we trained DNNs to align their representations with human neural responses from consecutive VVS regions while performing visual tasks. We demonstrate a hierarchical improvement in DNN robustness: alignment to higher-order VVS regions leads to greater improvement. To investigate the mechanism behind such robustness gains, we test a prominent hypothesis that attributes human robustness to the unique geometry of neural category manifolds in the VVS. We first reveal that more desirable manifold properties, specifically, smaller extent and better linear separability, indeed emerge across the human VVS. These properties can be inherited by neurally aligned DNNs and predict their subsequent robustness gains. Furthermore, we show that supervision from neural manifolds alone, via manifold guidance, is sufficient to qualitatively reproduce the hierarchical robustness improvements. Together, these results highlight the critical role of the evolving representational space across VVS in achieving robust visual inference, in part through the formation of more linearly separable category manifolds, which may in turn be leveraged to develop more robust AI systems.
+
+***
+### TODO:
+
+- [ ] **Manifold analysis and Manifold Guidance code to be uploaded**
+    
+***
 ### Data:
 - Original human neural data are retrieved from the Natural Scene Dataset (NSD) (Allen et al., 2022) publically available on [here](https://naturalscenesdataset.org/).
 
