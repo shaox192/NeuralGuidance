@@ -3,7 +3,7 @@
 This is the code repo for [*Probing Human Visual Robustness with Neurally-Guided Deep Neural Networks*](https://arxiv.org/abs/2405.02564) 
 by Zhenan Shao, Linjian Ma, Yiqing Zhou, Yibo Jacky Zhang, Sanmi Koyejo, Bo Li, and Diane M. Beck.
 
-We gave an oral presentation [@*VSS2024*](https://www.visionsciences.org/talk-session/?id=164) for the main Neural Guidance results and an oral presentation [@*VSS2025*](https://www.visionsciences.org/talk-session/?id=392) for the manifold analysis and Manifold Guidance results.
+:tada: We gave an oral presentation [@*VSS2024*](https://www.visionsciences.org/talk-session/?id=164). Recordings are available [here](https://www.youtube.com/watch?v=O67BelJTyXY).
 
 [//]: # (### figure)
 ![alt text](docs/img/neuralguidance.png)
