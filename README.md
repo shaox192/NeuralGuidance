@@ -13,12 +13,6 @@ by Zhenan Shao, Linjian Ma, Yiqing Zhou, Yibo Jacky Zhang, Sanmi Koyejo, Bo Li, 
 Humans effortlessly navigate the visual world, yet deep neural networks (DNNs), despite excelling at many visual tasks, are surprisingly vulnerable to minor image perturbations. Past theories suggest human visual robustness arises from a representational space that evolves along the ventral visual stream (VVS) of the brain to increasingly tolerate object transformations. To test whether robustness is supported by such progression as opposed to being confined to specialized higher-order regions, we trained DNNs to align their representations with human neural responses from consecutive VVS regions during visual tasks. We demonstrate a hierarchical improvement in DNN robustness: alignment to higher-order VVS regions yields greater gains. To investigate the mechanism behind this improvement, we test a prominent hypothesis that attributes human visual robustness to the unique geometry of neural category manifolds in the VVS. We show that desirable manifold properties, specifically, smaller extent and better linear separability, emerge across the human VVS. These properties are inherited by DNNs via neural guidance and can predict their subsequent robustness gains. Further, we show that supervision from neural manifolds alone, via manifold guidance, suffices to qualitatively reproduce the hierarchical robustness improvements. Together, our results highlight the evolving VVS representational space as critical for robust visual inference, with the more linearly separable category manifolds as one potential mechanism, offering insights for building more resilient AI systems. 
 
 ***
-### TODO:
-
-- [ ] **Manifold analysis and Manifold Guidance code to be uploaded**
-
-
-***
 ### Requirements
 
 The usual ML, pytorch, python suites are required. We tested in an environment with python == 3.9.18, torch == 2.0.1+cu117, and we used 4 * A40 GPUs to train the Neurally guided models. We provide a [requirements.txt](./requirements.txt) here for your reference. 
