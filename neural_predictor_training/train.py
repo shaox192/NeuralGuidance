@@ -20,16 +20,18 @@ parser.add_argument('--sub', default='sub1', type=str, help='sub1, sub2, ...')
 parser.add_argument('--roi', default='V1', type=str,
                     help='roi name: [V1], [hV4]...')
 
-parser.add_argument('--data-dir', type=str, help='where to find the training data')
+parser.add_argument('--roi-data-dir', type=str, help='where to find the neural reprs training data')
+parser.add_argument('--stim-data-dir', type=str, help='where to find the images training data')
 parser.add_argument('--save-dir', type=str, help='where to save outputs')
 
 parser.add_argument('--shuffle', action='store_true', help="shuffle neural data during training - control condition")
-
+parser.add_argument('--save-interval', default=5, type=int, help='when to save checkpoint')
 parser.add_argument('--lr',  default=1e-3, type=float,
                     metavar='LR', help='initial learning rate', dest='lr')
 parser.add_argument('--epk', default=40, type=int, help='number of epochs', dest='epk')
-parser.add_argument('--save-interval', default=5, type=int, help='when to save checkpoint', dest='epk')
 
+parser.add_argument('--batch_size_train', default=256, type=int, help='batch size for training')
+parser.add_argument('--batch_size_val', default=100, type=int, help='batch size for validation')
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"--> Using device: {DEVICE} <--")
@@ -93,7 +95,13 @@ def train(data_loader, model, criterion, optimizer, val_loader, num_epochs=10, s
         val_loss_per_epoch.append(val_loss)
 
         if epoch % save_interval == 0 and epoch != 0:
-            torch.save(model, f"{save_dir_name}_epoch_{epoch}.pth")
+            state = {
+                'epoch': args.epk + 1,
+                'arch': "resnet18",
+                'state_dict': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+            }
+            torch.save(state, f"{save_dir_name}_epoch{epoch}.pth")
 
     return model, train_loss_per_epoch, val_corr_per_epoch, val_loss_per_epoch
 
@@ -149,13 +157,13 @@ def shuffle_img_id(val_id, train_id):
 def main(args):
 
     # save stuff
-    save_dir = join_pth(args.save_dir, f"{args.sub}_np_ckpt")
+    save_dir = args.save_dir
     save_prefix = join_pth(save_dir, f"np_{args.roi}_shuffle") if args.shuffle else \
                     join_pth(save_dir, f"np_{args.roi}")
     utils.make_directory(save_dir)
 
     # neural data:
-    beta_f = join_pth(args.data_dir, f"{args.sub}_{args.roi}_data.pkl")
+    beta_f = join_pth(args.roi_data_dir, f"{args.sub}_{args.roi}_data.pkl")
     order_data_orig = utils.pickle_load(beta_f)
 
     val_img_id = order_data_orig["val_imgID"]
@@ -172,7 +180,7 @@ def main(args):
           f"\ttrain image ID: {train_img_id.shape}, val beta: {train_beta.shape}", flush=True)
 
     # stimuli images
-    stim_f = join_pth(args.data_dir, f"{args.sub}_stimuli_227.h5py")
+    stim_f = join_pth(args.stim_data_dir, f"{args.sub}_stimuli_227.h5py")
     image_data_h5py = h5py.File(stim_f, 'r')
     image_data = np.copy(image_data_h5py['stimuli'])
     image_data_h5py.close()
@@ -181,12 +189,12 @@ def main(args):
     # extract validation set
     val_images = image_data[val_img_id]
     print(f"*** Validation set, image shape: {val_images.shape}")
-    val_data_ldr = data_loader(val_images, val_beta, 100, False)
+    val_data_ldr = data_loader(val_images, val_beta, args.batch_size_val, False)
 
     # load training set
     train_images = image_data[train_img_id]
     print(f"*** Training set, image shape: {train_images.shape}")
-    train_data_ldr = data_loader(train_images, train_beta, 200, True)
+    train_data_ldr = data_loader(train_images, train_beta, args.batch_size_train, True)
 
     # initialize model, loss and optimizer
     net = models.resnet18(num_classes=train_beta.shape[1])

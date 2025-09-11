@@ -20,7 +20,7 @@ from torch.utils.data import Subset
 from model import CoTrainNet, RegLoss, correlation
 from utils import save_checkpoint, Summary, AverageMeter, ProgressMeter, accuracy, pickle_dump, make_directory
 from Encoders import Encoders
-from torch_gnet import Gnet
+# from torch_gnet import Gnet
 import data_loader
 
 model_names = sorted(name for name in models.__dict__
@@ -136,10 +136,17 @@ def main():
 
     args.distributed = args.world_size > 1 or args.multiprocessing_distributed
 
+    if args.roi.lower() == "none":
+        args.lr = 0.15 # when no neural regularization, use a larger lr
+        args.alpha = 0.0
+        print("!!!!!!!! alpha set to 0.0 when ROI is [None]")
+
+
     if torch.cuda.is_available():
         ngpus_per_node = torch.cuda.device_count()
     else:
         ngpus_per_node = 1
+        args.rank = 0
     if args.multiprocessing_distributed:
         # Since we have ngpus_per_node processes per node, the total world_size
         # needs to be adjusted accordingly
@@ -190,24 +197,16 @@ def main_worker(gpu, ngpus_per_node, args):
         classifier = models.__dict__[args.arch]()
 
     if args.roi in ["random", "None"]:
-        if args.roi == "None":
-            args.alpha = 0.0
-            print("!!!!!!!! alpha set to 0.0 when ROI is [None]")
-        n_vox = 497
-        neural_predictor = Encoders(args.neural_arch, n_vox).net
+        num_voxels = 497
+        neural_predictor = Encoders(args.neural_arch, num_voxels).net
         print(f"\t--> Using {args.roi}-initialized {args.neural_arch} neural predictor with", end=' ')
     else:
-        neural_predictor = torch.load(args.neural_predictor_pth)
+        ckpt = torch.load(args.neural_predictor_pth, map_location='cpu')
+        num_voxels = ckpt["state_dict"]["fc.bias"].shape[0]
+        neural_predictor = Encoders(args.neural_arch, num_voxels).net
+        neural_predictor.load_state_dict(ckpt['state_dict'])
         print(f"\t--> Using {args.roi}-trained {args.neural_arch} neural predictor with", end=' ')
 
-    if type(neural_predictor) == torchvision.models.resnet.ResNet:
-        num_voxels = neural_predictor.fc.out_features
-    elif type(neural_predictor) == torchvision.models.AlexNet:
-        num_voxels = neural_predictor.classifier[-1].out_features
-    elif type(neural_predictor) == torchvision.models.EfficientNet:
-        num_voxels = neural_predictor.classifier[-1].out_features
-    elif type(neural_predictor) == Gnet:
-        num_voxels = neural_predictor.subject_fwrf.nv
     print(f"\t--> number of voxels: {num_voxels}")
 
     model = CoTrainNet(classifier, neural_predictor, num_voxels, neural_head_pos=args.neural_predictor_pos)
@@ -347,7 +346,7 @@ def main_worker(gpu, ngpus_per_node, args):
         if (
                 epoch % args.save_interval == 0 and
                 epoch != 0 and
-                args.multiprocessing_distributed and
+                # args.multiprocessing_distributed and
                 args.rank % ngpus_per_node == 0
         ):
             state = {

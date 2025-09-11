@@ -1,0 +1,50 @@
+n04228054: ski
+n04039381: racket
+n09835506: ballplayer
+n02391049: zebra
+n07873807: pizza
+n03761084: microwave
+n06874185: traffic light
+n04487081: trolleybus
+n04447861: toilet seat
+n02690373: airliner
+n04507155: umbrella
+n04553703: washbasin
+n06794110: street sign
+n03895866: passenger car
+n09428293: seashore
+n02403003: ox
+n07579787: plate
+n03873416: paddle
+n02504458: African elephant
+n03891251: park bench
+n07753592: banana
+n02825657: bell cote
+n07697537: hotdog
+n04081281: restaurant
+n02504013: Indian elephant
+n03272562: electric locomotive
+n03785016: moped
+n03888257: parachute
+n02412080: ram
+n04399382: teddy
+n04552348: warplane
+n04522168: vase
+n07714990: broccoli
+n04509417: unicycle
+n02389026: sorrel
+n03642806: laptop
+n03742115: medicine chest
+n02776631: bakery
+n02423022: gazelle
+n04033995: quilt
+n03201208: dining table
+n02437616: llama
+n03216828: dock
+n04344873: studio couch
+n04335435: streetcar
+n04350905: suit
+n02708093: analog clock
+n04254680: soccer ball
+n04404412: television
+n09193705: alp
