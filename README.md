@@ -15,7 +15,7 @@ Humans effortlessly navigate the visual world, yet deep neural networks (DNNs), 
 ***
 ### Requirements
 
-The usual ML, pytorch, python suites are required. We tested in an environment with python == 3.9.18, torch == 2.0.1+cu117, and we used 4 * A40 GPUs to train the Neurally guided models. We provide a [requirements.txt](./requirements.txt) here for your reference. 
+The usual ML, pytorch, python suites are required. We tested in an environment with python == 3.12.3, torch == 2.8.0+cu128, and we used 4 * A40 GPUs to train the Neurally guided models. We provide a [requirements.txt](./requirements.txt) here for your reference. 
 
 ---
 ### Data

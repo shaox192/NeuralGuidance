@@ -2,8 +2,8 @@
 # Only the packages actually imported by the code in this repo are listed here.
 
 # --- core ---
-torch==2.0.1
-torchvision==0.15.2
+torch==2.8.0+cu128
+torchvision==0.23.0+cu128
 numpy
 scipy
 scikit-learn
@@ -16,7 +16,7 @@ nibabel==5.1.0
 requests
 
 # --- adversarial robustness analysis (analysis/) ---
-foolbox==3.3.3
+foolbox==3.3.4
 autoattack @ git+https://github.com/fra31/auto-attack@a39220048b3c9f2cca9a4d3a54604793c68eca7e
 
 # --- plotting ---
